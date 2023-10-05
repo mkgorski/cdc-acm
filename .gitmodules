@@ -1,0 +1,6 @@
+[submodule "src/hw/libopencm3"]
+	path = src/hw/libopencm3
+	url = https://github.com/libopencm3/libopencm3.git
+[submodule "src/mbed-sw"]
+	path = src/mbed-sw
+	url = https://github.com/mkgorski/mbed-sw.git
