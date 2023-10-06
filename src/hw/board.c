@@ -30,7 +30,8 @@ int board_poll(void)
 {
   if (timer_expired(&blink_timer)) {
     timer_restart(&blink_timer);
-    gpio_toggle(GPIOC, GPIO13);
+    // gpio_toggle(GPIOC, GPIO13);
+    gpio_toggle(GPIOB, GPIO13);
   }
   return 0;
 }
@@ -45,7 +46,7 @@ int board_deinit(void)
 
 static void clock_init(void)
 {
-  rcc_clock_setup_pll(&rcc_hse_25mhz_3v3[RCC_CLOCK_3V3_84MHZ]);
+  rcc_clock_setup_pll(&rcc_hse_25mhz_3v3[RCC_CLOCK_3V3_96MHZ]);
 
   rcc_periph_clock_enable(RCC_GPIOA);
   rcc_periph_clock_enable(RCC_GPIOB);
@@ -60,6 +61,8 @@ static void clock_deinit(void)
 static void gpio_init(void)
 {
   gpio_mode_setup(GPIOC, GPIO_MODE_OUTPUT, GPIO_PUPD_NONE, GPIO13); // LED
+  gpio_mode_setup(GPIOB, GPIO_MODE_OUTPUT, GPIO_PUPD_NONE, GPIO12); // DBG1
+  gpio_mode_setup(GPIOB, GPIO_MODE_OUTPUT, GPIO_PUPD_NONE, GPIO13); // DBG2
 }
 
 static void gpio_deinit(void)

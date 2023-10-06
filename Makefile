@@ -1,15 +1,16 @@
 PROJECT = cdcacm
 BUILD_DIR = bin
 
-DEVICE=stm32f401cc
-CFLAGS += -DSYSTEM_CLOCK=84000000
+DEVICE=stm32f411ce
+CFLAGS += -DSYSTEM_CLOCK=96000000
 
 SHARED_DIR =
 CFILES =  src/main.c
 
 CFILES += src/hw/time.c \
 					src/hw/board.c \
-					src/hw/logging.c
+					src/hw/logging.c \
+					src/hw/usb.c
 CFILES += src/mbed-sw/src/core/timer.c \
 					src/mbed-sw/src/core/fifo.c \
 					src/mbed-sw/src/core/slist.c \
