@@ -3,6 +3,7 @@
 #include "dlist.h"
 #include "uart.h"
 #include "usb.h"
+#include "board.h"
 #include "cdc_bridge.h"
 #include "logging.h"
 
@@ -19,6 +20,7 @@ static dlist_t rx_queue;
 
 static void usb_rx_cb(uint8_t *buf, uint32_t len);
 static void uart_event_cb(uart_event_t *event);
+static void btn_poll(void);
 
 int cdc_brigde_init()
 {
@@ -38,6 +40,7 @@ int cdc_bridge_poll()
 {
   usb_poll();
   uart_poll();
+  btn_poll();
 
   // USB to UART
   if (!dlist_empty(&tx_queue)) {
@@ -102,5 +105,25 @@ static void uart_event_cb(uart_event_t *event)
 
   if ((event->type == UART_TX_DONE) || (event->type == UART_TX_ABORTED)) {
     alloc_free(event->data.tx.buf);
+  }
+}
+
+static void btn_poll()
+{
+  static int cnt = 0;
+  static int pressed = 0;
+
+  if (board_btn_pressed()) {
+    if (pressed == 0) {
+      cnt++;
+      if (cnt > 500) {
+        pressed = 1;
+        log("btn pressed\n");
+      }
+    }
+  }
+  else {
+    cnt = 0;
+    pressed = 0;
   }
 }

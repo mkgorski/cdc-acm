@@ -44,6 +44,11 @@ int board_deinit(void)
   return 0;
 }
 
+int board_btn_pressed(void)
+{
+  return gpio_get(GPIOA, GPIO0) == 0;
+}
+
 static void clock_init(void)
 {
   rcc_clock_setup_pll(&rcc_hse_25mhz_3v3[RCC_CLOCK_3V3_96MHZ]);
@@ -63,6 +68,7 @@ static void gpio_init(void)
   gpio_mode_setup(GPIOC, GPIO_MODE_OUTPUT, GPIO_PUPD_NONE, GPIO13); // LED
   gpio_mode_setup(GPIOB, GPIO_MODE_OUTPUT, GPIO_PUPD_NONE, GPIO12); // DBG1
   gpio_mode_setup(GPIOB, GPIO_MODE_OUTPUT, GPIO_PUPD_NONE, GPIO13); // DBG2
+  gpio_mode_setup(GPIOA, GPIO_MODE_INPUT, GPIO_PUPD_PULLUP, GPIO0); // BTN
 }
 
 static void gpio_deinit(void)
