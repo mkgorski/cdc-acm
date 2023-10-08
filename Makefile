@@ -10,7 +10,9 @@ CFILES =  src/main.c
 CFILES += src/hw/time.c \
 					src/hw/board.c \
 					src/hw/logging.c \
-					src/hw/usb.c
+					src/hw/usb.c \
+					src/hw/uart.c \
+					src/cdc_bridge.c
 CFILES += src/mbed-sw/src/core/timer.c \
 					src/mbed-sw/src/core/fifo.c \
 					src/mbed-sw/src/core/slist.c \

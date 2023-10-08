@@ -4,18 +4,18 @@
 #include "alloc.h"
 #include "logging.h"
 #include "board.h"
-#include "usb.h"
+#include "cdc_bridge.h"
 
 int main(void)
 {
   board_preinit();
   board_init();
   log_init();
-  usb_init();
+  cdc_brigde_init();
   log("CDC ACM starting\n");
 
 	while (1) {
-		usb_poll();
+		cdc_bridge_poll();
     board_poll();
     log_poll();
 	}

@@ -8,6 +8,7 @@
 #include "usb.h"
 
 static usbd_device *_usbd_dev;
+static usb_recv_cb_t _usb_recv_cb = NULL;
 
 static const struct usb_device_descriptor dev = {
 	.bLength = USB_DT_DEVICE_SIZE,
@@ -186,8 +187,9 @@ static void cdcacm_data_rx_cb(usbd_device *usbd_dev, uint8_t ep)
 	char buf[64];
 	int len = usbd_ep_read_packet(usbd_dev, 0x01, buf, 64);
 
-	if (len) {
-		while (usbd_ep_write_packet(usbd_dev, 0x82, buf, len) == 0);
+	if (len && _usb_recv_cb) {
+    _usb_recv_cb((uint8_t *)buf, len);
+		// while (usbd_ep_write_packet(usbd_dev, 0x82, buf, len) == 0);
 	}
 }
 
@@ -208,7 +210,7 @@ static void cdcacm_set_config(usbd_device *usbd_dev, uint16_t wValue)
 }
 
 
-int usb_init()
+int usb_init(usb_recv_cb_t cb)
 {
 	rcc_periph_clock_enable(RCC_GPIOA);
 	rcc_periph_clock_enable(RCC_OTGFS);
@@ -223,7 +225,15 @@ int usb_init()
 
 	usbd_register_set_config_callback(_usbd_dev, cdcacm_set_config);
 
+  if (cb)
+    _usb_recv_cb = cb;
+
   return 0;
+}
+
+int usb_send(uint8_t *buf, uint32_t len)
+{
+  return usbd_ep_write_packet(_usbd_dev, 0x82, buf, len);
 }
 
 int usb_poll()
